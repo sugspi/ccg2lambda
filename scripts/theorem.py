@@ -40,6 +40,7 @@ class Theorem(object):
         self.axioms = set() if axioms is None else axioms
         self.dynamic_library_str = dynamic_library_str
         self.inference_result = None
+        self.inference_results = []
         self.coq_script = None
         self.is_negated = is_negated
         self.variations = []
@@ -143,12 +144,26 @@ class Theorem(object):
         self.inference_result = prove_script(self.coq_script, self.timeout)
         return
 
+    def prove_somecase(self):
+        for t_case in self.premises:
+            self.coq_script = make_coq_script(
+                [self.conclusion],
+                t_case,
+                self.dynamic_library_str,
+                self.axioms)
+            judge = prove_script(self.coq_script, self.timeout)
+            if judge == True :
+                self.inference_results.append("yes")
+            else:
+                self.inference_results.append("unknown")
+        return
+
     def prove(self, abduction=None):
         self.prove_simple()
         self.variations.append(self)
-        if self.inference_result is False:
-            neg_theorem = self.negate()
-            neg_theorem.prove_simple()
+        #if self.inference_result is False:
+        #    neg_theorem = self.negate()
+        #    neg_theorem.prove_simple()
         if abduction and self.result == 'unknown' and self.doc is not None:
             abduction.attempt(self)
         return
@@ -244,14 +259,14 @@ def make_failure_log_node(failure_log):
             gn.set('predicate', g['subgoal'])
             gn.set('index', str(g['index']))
             gn.set('line', g['raw_subgoal'])
-    
+
             pns = etree.Element('matching_premises')
             gn.append(pns)
             for prem in g.get('matching_premises', []):
                 pn = etree.Element('matching_premise')
                 pns.append(pn)
                 pn.set('predicate', prem)
-    
+
             pns = etree.Element('matching_raw_premises')
             gn.append(pns)
             for prem in g.get('matching_raw_premises', []):
@@ -387,6 +402,7 @@ class MasterTheorem(Theorem):
         self.theorems = [] if theorems is None else theorems
         self.doc = None
         self.inference_result = None
+        self.inference_results = []
         self.failure_log = None
         self.timeout = 100
 
@@ -425,8 +441,12 @@ class MasterTheorem(Theorem):
     def prove(self, abduction=None):
         for theorem in self.theorems:
             theorem.prove(abduction)
+            theorem.prove_somecase() #added by manome
+            self.inference_results = theorem.inference_results
             if theorem.result != 'unknown':
                 break
+            #print("premises",theorem.premises)
+            #print("conclusion",theorem.conclusion)
         return
 
     @property
@@ -457,6 +477,7 @@ class MasterTheorem(Theorem):
         for theorem in self.theorems:
             mt_node.append(theorem.to_xml())
         return mt_node
+
 
 
 def generate_semantics_from_doc(doc, max_gen=1, use_gold_trees=False):
@@ -504,4 +525,3 @@ def generate_semantics_from_doc(doc, max_gen=1, use_gold_trees=False):
     if i == 0:
         logging.warning('Cartesian product of semantic interpretations exhausted with i == 0')
     return
-

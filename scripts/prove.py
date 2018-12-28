@@ -74,12 +74,12 @@ def main(args = None):
     ARGS = parser.parse_args()
 
     logging.basicConfig(level=logging.WARNING)
-      
+
     if not os.path.exists(ARGS.sem):
         print('File does not exist: {0}'.format(ARGS.sem), file=sys.stderr)
         parser.print_help(file=sys.stderr)
         sys.exit(1)
-    
+
     if ARGS.abduction == "spsa":
         from abduction_spsa import AxiomsWordnet
         ABDUCTION = AxiomsWordnet()
@@ -150,6 +150,7 @@ def prove_doc_ind(document_ind):
         theorem = prove_doc(doc, ABDUCTION, ARGS)
         proof_node.set('status', 'success')
         inference_result = theorem.result
+        print("my prove: ",theorem.inference_results)#added by kana
         proof_node.set('inference_result', inference_result)
         theorems_node = theorem.to_xml()
         proof_node.append(theorems_node)
