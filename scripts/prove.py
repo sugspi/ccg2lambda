@@ -137,6 +137,27 @@ def prove_docs_seq(document_inds):
         proof_nodes.append(proof_node)
     return proof_nodes
 
+###add by kana###
+def count_inference_results(inf_rslt):
+    f =  open('count_infence.txt', 'a')
+    tmpstr = ''
+    yes_count = 0
+    for r in inf_rslt:
+        tmpstr += r + ' '
+        if(r=='yes'):
+            yes_count += 1
+
+    tmpstr = tmpstr[:-1]
+    #f.write(tmpstr+'\n')
+    print(str(len(inf_rslt)))
+    print(str(yes_count))
+    f.write(str(yes_count)+'\n')
+    f.close()
+    return
+#################
+
+
+
 def prove_doc_ind(document_ind):
     """
     Perform RTE inference for the document ID document_ind.
@@ -150,7 +171,9 @@ def prove_doc_ind(document_ind):
         theorem = prove_doc(doc, ABDUCTION, ARGS)
         proof_node.set('status', 'success')
         inference_result = theorem.result
-        print("my prove: ",theorem.inference_results)#added by kana
+        other_inference_result = theorem.inference_results
+        print("my prove: ",other_inference_result)#added by kana
+        count_inference_results(other_inference_result)
         proof_node.set('inference_result', inference_result)
         theorems_node = theorem.to_xml()
         proof_node.append(theorems_node)
