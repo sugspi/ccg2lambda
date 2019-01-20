@@ -138,21 +138,23 @@ def prove_docs_seq(document_inds):
     return proof_nodes
 
 ###add by kana###
+#delete some time
 def count_inference_results(inf_rslt):
-    f =  open('count_infence.txt', 'a')
+    #f =  open('count_infence.txt', 'a')
     tmpstr = ''
-    yes_count = 0
+    #yes_count = 0
     for r in inf_rslt:
-        tmpstr += r + ' '
-        if(r=='yes'):
-            yes_count += 1
+        print(r)
+    #    tmpstr += r + ' '
+    #    if(r=='yes'):
+    #        yes_count += 1
 
-    tmpstr = tmpstr[:-1]
+    #tmpstr = tmpstr[:-1]
     #f.write(tmpstr+'\n')
-    print(str(len(inf_rslt)))
-    print(str(yes_count))
-    f.write(str(yes_count)+'\n')
-    f.close()
+    #print(str(len(inf_rslt)))
+    #print(str(yes_count))
+    #f.write(str(yes_count)+'\n')
+    #f.close()
     return
 #################
 
@@ -167,13 +169,12 @@ def prove_doc_ind(document_ind):
     doc = DOCS[document_ind]
     proof_node = etree.Element('proof')
     inference_result = 'unknown'
+
     try:
-        theorem = prove_doc(doc, ABDUCTION, ARGS)
+        theorem = prove_doc(doc, ABDUCTION, ARGS)#ここのせいでexceptいくことも多い？
         proof_node.set('status', 'success')
         inference_result = theorem.result
         other_inference_result = theorem.inference_results
-        print("my prove: ",other_inference_result)#added by kana
-        count_inference_results(other_inference_result)
         proof_node.set('inference_result', inference_result)
         theorems_node = theorem.to_xml()
         proof_node.append(theorems_node)
@@ -202,6 +203,7 @@ def prove_doc_ind(document_ind):
         print(label[0], end='', file=sys.stdout)
     lock.release()
     sys.stdout.flush()
+    count_inference_results(other_inference_result)
     return etree.tostring(proof_node)
 
 if __name__ == '__main__':

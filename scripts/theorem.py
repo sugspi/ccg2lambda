@@ -145,7 +145,7 @@ class Theorem(object):
         return
 
     def prove_somecase(self):
-        for t_case in self.premises:
+        for itr,t_case in enumerate(self.premises): #reversesをつかいたかった by kana
             self.coq_script = make_coq_script(
                 [self.conclusion],
                 t_case,
@@ -155,14 +155,23 @@ class Theorem(object):
             if judge == True :
                 self.inference_results.append("yes")
             else:
+                ##逆方向の証明はここをいじればよいはずだが，難しい...
                 self.inference_results.append("unknown")
+                #    neg_theorem = self.negate()
+                ####    neg_theorem.prove_simple() #いらない
+                #if abduction and self.doc is not None:
+                #    print('b-att_test')
+                    #abduction.attempt(self) #
+                #    print('a-att_test')
+                #else:
+                #    self.inference_results.append("unknown")
         return
 
     def prove(self, abduction=None):
         self.prove_simple()
         self.variations.append(self)
-        #if self.inference_result is False:
-        #    neg_theorem = self.negate()
+        if self.inference_result is False:
+            neg_theorem = self.negate()
         #    neg_theorem.prove_simple()
         if abduction and self.result == 'unknown' and self.doc is not None:
             abduction.attempt(self)
@@ -172,6 +181,9 @@ class Theorem(object):
         if len(self.premises) != 1:
             return None
         return self.copy([self.conclusion], self.premises[0])
+
+    def reverses(self,n): #added kana, 消すかも？
+        return self.copy([self.conclusion], self.premises[n])
 
     def to_xml(self):
         ts_node = etree.Element('theorems')
@@ -441,7 +453,7 @@ class MasterTheorem(Theorem):
     def prove(self, abduction=None):
         for theorem in self.theorems:
             theorem.prove(abduction)
-            theorem.prove_somecase() #added by manome
+            theorem.prove_somecase() #added by kana
             self.inference_results = theorem.inference_results
             if theorem.result != 'unknown':
                 break

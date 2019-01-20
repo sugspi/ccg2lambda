@@ -97,4 +97,3 @@ def resolve_prefix_to_infix_operations(expr_str, pred = 'R', symbol = '', bracke
             logging.warning('There is probably a problem in the resolution of ' \
                     'concatenation expressions in {0}'.format(expr_str))
     return cat_expr_str
-

@@ -43,7 +43,7 @@ correct=0
 rev_total=0
 rev_correct=0
 
-for f in ${results_dir}/${fileprefix}*.txt.answer ; do #.txt; do 修正が必要
+for f in ${results_dir}/${fileprefix}*.answer ; do #.txt; do 修正が必要
   let total++
   base_filename=${f##*/}
   sys_filename=${results_dir}/${base_filename}
@@ -76,7 +76,7 @@ accuracy=`echo "scale=3; $correct / $total" | bc -l`
 echo "Accuracy: "$correct" / "$total" = "$accuracy
 
 rev_accuracy=`echo "scale=3; $rev_correct / $rev_total" | bc -l`
-echo "rev-Accuracy: "$correct" / "$total" = "$rev_accuracy
+echo "rev-Accuracy: "$rev_correct" / "$rev_total" = "$rev_accuracy
 
 total_accuracy=`echo "scale=3; ($correct + $rev_correct) / ($total + $rev_total)" | bc -l`
 echo "total Accuracy: ("$correct"+"$rev_correct") / ("$total"+"$rev_total") = "$total_accuracy
