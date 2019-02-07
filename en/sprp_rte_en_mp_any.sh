@@ -339,10 +339,10 @@ for parser in `cat en/parser_location.txt`; do
   fi
   if [ ! -e ${results_dir}/${sentences_basename}.${parser_name}.answer ]; then
     proving $parser_name $sentences_basename
-    #lsselect_answer ${parser_name}
+    #select_answer ${parser_name}
   fi
-  #if [ ! -e ${results_dir}/${sentences_basename}.${parser_name}.answer ]; then
-  #  python scripts/visualize.py ${parsed_dir}/${sentences_basename}.${parser_name}.sem.xml \
-  #  > ${results_dir}/${sentences_basename}.${parser_name}.html
-  #fi
+  if [ ! -e ${results_dir}/${sentences_basename}.${parser_name}.answer ]; then
+    python scripts/visualize.py ${parsed_dir}/${sentences_basename}.${parser_name}.sem.xml \
+    > ${results_dir}/${sentences_basename}.${parser_name}.html
+  fi
 done

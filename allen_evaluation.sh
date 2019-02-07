@@ -4,9 +4,15 @@
 # ./allen_evaluation.sh
 
 
+#base_dir=/Users/guru/MyResearch/split_and_rephrase/sprp-logic-acl2019/data/new-websplit
+#plain_dir=${base_dir}/rte/main-test-random-org-nob-100
+#fileprefix=rte_random_org-nob
+
 base_dir=/Users/guru/MyResearch/split_and_rephrase/sprp-logic-acl2019/data/new-websplit
 plain_dir=${base_dir}/rte/main-test-random-org-nob-100
 fileprefix=rte_random_org-nob
+
+
 # Create a directory named "testset" and put problems and their answer
 # (whose prefix is "example"), as in:
 # $ ls testset/
@@ -14,7 +20,7 @@ fileprefix=rte_random_org-nob
 # example1.txt.answer		example2.txt.answer
 
 # Set a result directory
-results_dir=al_results
+results_dir=pal_results
 
 # # Copy a coq static library and compile it.
 # cp en/coqlib_sick.v coqlib.v
